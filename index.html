@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Quiz: Used to, Get used to, Be used to</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+    }
+    .question-card {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .question-title {
+      font-weight: bold;
+      font-size: 1.1em;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+    .options label {
+      display: block;
+      padding: 8px 12px;
+      margin: 6px 0;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .options label:hover {
+      background: #e9ecef;
+    }
+    .feedback {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+      font-size: 0.95em;
+    }
+    .correct {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .incorrect {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      font-size: 1.2em;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #score-box {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-top: 20px;
+      padding: 15px;
+      background: #2c3e50;
+      color: #fff;
+      border-radius: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Grammar Practice: Used to, Get used to & Be used to</h1>
+  <p>Choose the best option to complete each sentence or translate the phrase accurately.</p>
+  
+  <div id="quiz-container"></div>
+  <button onclick="submitQuiz()">Check All Answers</button>
+  <div id="score-box"></div>
+
+  <script>
+    const quizData = [
+      {
+        q: "1. When I was a child, I _______ cartoons every Saturday morning.",
+        options: ["used to watch", "am used to watching", "get used to watching"],
+        answer: 0,
+        explanation: "'Used to + base verb' describes a repeated past action that no longer happens."
+      },
+      {
+        q: "2. Don't worry about the noise. You will soon _______ it.",
+        options: ["used to", "get used to", "be used to"],
+        answer: 1,
+        explanation: "'Get used to' refers to the process of becoming accustomed to something new."
+      },
+      {
+        q: "3. She is a nurse, so she _______ working night shifts.",
+        options: ["used to", "is used to", "get used to"],
+        answer: 1,
+        explanation: "'Be used to + -ing' shows that she is already accustomed to this routine."
+      },
+      {
+        q: "4. Did you _______ live in Madrid before moving here?",
+        options: ["used to", "use to", "getting used to"],
+        answer: 1,
+        explanation: "In questions with 'did', the auxiliary takes the past tense, so we use the base form 'use to'."
+      },
+      {
+        q: "5. I moved to London last week, and I'm still _______ on the left side of the road.",
+        options: ["used to drive", "getting used to driving", "use to driving"],
+        answer: 1,
+        explanation: "'Getting used to + -ing' describes an ongoing process of adaptation."
+      },
+      {
+        q: "6. He _______ like coffee, but now he drinks three cups a day.",
+        options: ["didn't use to", "wasn't used to", "didn't get used to"],
+        answer: 0,
+        explanation: "Negative past habits use 'didn't use to + base verb'."
+      },
+      {
+        q: "7. My grandmother _______ smartphones; she prefers her old landline.",
+        options: ["isn't used to", "didn't use to", "used to"],
+        answer: 0,
+        explanation: "'Isn't used to + noun' means she is not familiar or comfortable with smartphones."
+      },
+      {
+        q: "8. How long did it take you to _______ the cold weather in Canada?",
+        options: ["used to", "get used to", "be used to"],
+        answer: 1,
+        explanation: "'Get used to' expresses the process of adapting over a period of time."
+      },
+      {
+        q: "9. There _______ be a cinema on this street, but it closed years ago.",
+        options: ["used to", "was used to", "got used to"],
+        answer: 0,
+        explanation: "'Used to + base verb' describes a past state that is no longer true."
+      },
+      {
+        q: "10. We _______ waking up at 5:00 AM because we have done it for ten years.",
+        options: ["used to", "are used to", "get used to"],
+        answer: 1,
+        explanation: "Because it has been a habit for ten years, it is now familiar ('are used to + -ing')."
+      },
+      {
+        q: "11. I can't _______ spicy food; it always upsets my stomach.",
+        options: ["used to eat", "get used to eating", "am used to eating"],
+        answer: 1,
+        explanation: "After modal verbs like 'can't', use the base form 'get used to + -ing'."
+      },
+      {
+        q: "12. _______ your sister use to play the piano when she was younger?",
+        options: ["Was", "Did", "Is"],
+        answer: 1,
+        explanation: "Questions about past habits require the auxiliary 'Did' + 'use to'."
+      },
+      {
+        q: "13. Although he is from Brazil, he _______ the freezing winters in Sweden now.",
+        options: ["is used to", "used to", "use to"],
+        answer: 0,
+        explanation: "'Is used to + noun' indicates he is currently accustomed to the weather."
+      },
+      {
+        q: "14. They _______ have a dog, so they don't know how to take care of one.",
+        options: ["aren't used to", "didn't use to", "weren't used to"],
+        answer: 1,
+        explanation: "'Didn't use to + base verb' describes a past state (never owning a dog)."
+      },
+      {
+        q: "15. After a few months in the new job, Sarah finally _______ the heavy workload.",
+        options: ["used to", "got used to", "is used to"],
+        answer: 1,
+        explanation: "'Got used to' shows the completed process of adapting in the past."
+      },
+      {
+        q: "16. Are you _______ your new glasses yet?",
+        options: ["used to", "use to", "getting use to"],
+        answer: 0,
+        explanation: "'Are you used to + noun' asks if the glasses feel normal and familiar now."
+      },
+      {
+        q: "17. I _______ go jogging every evening, but I injured my knee last month.",
+        options: ["am used to", "used to", "got used to"],
+        answer: 1,
+        explanation: "'Used to + base verb' describes a past routine that stopped."
+      },
+      {
+        q: "18. Working from home was strange at first, but now I _______ it.",
+        options: ["used to", "am used to", "use to"],
+        answer: 1,
+        explanation: "'Am used to + pronoun' shows that working from home now feels normal."
+      },
+      {
+        q: "19. He is a chef, so he _______ standing for hours in a hot kitchen.",
+        options: ["is used to", "used to", "get used to"],
+        answer: 0,
+        explanation: "'Is used to + -ing' indicates familiarity with a demanding condition."
+      },
+      {
+        q: "20. Did she _______ the new software easily?",
+        options: ["used to", "get used to", "was used to"],
+        answer: 1,
+        explanation: "After 'Did', we use the base form 'get used to + noun' to ask about the adaptation process."
+      },
+      {
+        q: "21. My parents _______ travel a lot before they retired.",
+        options: ["used to", "are used to", "getting used to"],
+        answer: 0,
+        explanation: "'Used to + base verb' describes a repeated activity in the past."
+      },
+      {
+        q: "22. You look tired. You _______ staying up this late.",
+        options: ["didn't use to", "aren't used to", "don't use to"],
+        answer: 1,
+        explanation: "'Aren't used to + -ing' means staying up late is not normal for you."
+      },
+      {
+        q: "23. Little by little, the puppy is _______ its new home.",
+        options: ["used to", "getting used to", "use to"],
+        answer: 1,
+        explanation: "'Little by little' signals a gradual process ('is getting used to')."
+      },
+      {
+        q: "24. What _______ you use to do during summer vacations as a kid?",
+        options: ["were", "did", "are"],
+        answer: 1,
+        explanation: "Past habit questions use 'did + subject + use to + base verb'."
+      },
+      {
+        q: "25. I will never _______ waking up before sunrise.",
+        options: ["used to", "get used to", "be use to"],
+        answer: 1,
+        explanation: "'Will never get used to + -ing' expresses an inability to adapt in the future."
+      },
+      {
+        q: "26. [Translate to English] Eu costumava jogar futebol todos os dias.",
+        options: ["I am used to playing soccer every day.", "I used to play soccer every day.", "I got used to play soccer every day."],
+        answer: 1,
+        explanation: "'Costumava' indicates a past habit that no longer happens: 'used to + base verb'."
+      },
+      {
+        q: "27. [Translate to English] Ela está acostumada a trabalhar sob pressão.",
+        options: ["She is used to working under pressure.", "She used to work under pressure.", "She gets used to work under pressure."],
+        answer: 0,
+        explanation: "'Está acostumada' describes a current state of familiarity: 'is used to + -ing'."
+      },
+      {
+        q: "28. [Translate to English] Nós precisamos nos acostumar a acordar cedo.",
+        options: ["We need to used to waking up early.", "We need to get used to waking up early.", "We are used to wake up early."],
+        answer: 1,
+        explanation: "'Nos acostumar' indicates the process of adapting: 'get used to + -ing'."
+      },
+      {
+        q: "29. [Translate to English] Ele não costumava comer vegetais quando era criança.",
+        options: ["He wasn't used to eating vegetables as a child.", "He didn't use to eat vegetables when he was a child.", "He didn't get used to eat vegetables as a child."],
+        answer: 1,
+        explanation: "'Não costumava' is a negative past habit: 'didn't use to + base verb'."
+      },
+      {
+        q: "30. [Translate to English] Você já se acostumou a morar sozinho?",
+        options: ["Did you use to live alone?", "Have you got used to living alone yet?", "Are you use to living alone?"],
+        answer: 1,
+        explanation: "'Se acostumou' asks about completing the adaptation process: 'get used to + -ing'."
+      }
+    ];
+
+    const container = document.getElementById('quiz-container');
+
+    quizData.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      
+      let optionsHTML = '';
+      item.options.forEach((opt, i) => {
+        optionsHTML += `
+          <label>
+            <input type="radio" name="q${index}" value="${i}"> ${opt}
+          </label>
+        `;
+      });
+
+      card.innerHTML = `
+        <div class="question-title">${item.q}</div>
+        <div class="options">${optionsHTML}</div>
+        <div class="feedback" id="feedback-${index}"></div>
+      `;
+      container.appendChild(card);
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      quizData.forEach((item, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const feedbackEl = document.getElementById(`feedback-${index}`);
+        feedbackEl.style.display = 'block';
+
+        if (!selected) {
+          feedbackEl.className = 'feedback incorrect';
+          feedbackEl.innerHTML = `<strong>Unanswered!</strong> Correct answer: <em>${item.options[item.answer]}</em>. ${item.explanation}`;
+        } else if (parseInt(selected.value) === item.answer) {
+          score++;
+          feedbackEl.className = 'feedback correct';
+          feedbackEl.innerHTML = `<strong>Correct!</strong> ${item.explanation}`;
+        } else {
+          feedbackEl.className = 'feedback incorrect';
+          feedbackEl.innerHTML = `<strong>Incorrect.</strong> Correct answer: <em>${item.options[item.answer]}</em>. ${item.explanation}`;
+        }
+      });
+
+      const scoreBox = document.getElementById('score-box');
+      scoreBox.style.display = 'block';
+      scoreBox.innerHTML = `Your Score: ${score} out of ${quizData.length}`;
+      scoreBox.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
